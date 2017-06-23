@@ -116,10 +116,10 @@ $(document).ready(function(){
  	$("tbody").text("");
  	for(var i=0;i<student_array.length;i++){
  		var tableRow = $("<tr>").addClass("row")
- 		var tName = $("<th>").text(student_array[i].name);
- 		var tCourse = $("<th>").text(student_array[i].course);
- 		var tGrade = $("<th>").text(student_array[i].grade);
- 		var tDelete = $("<th>");
+ 		var tName = $("<td>").text(student_array[i].name);
+ 		var tCourse = $("<td>").text(student_array[i].course);
+ 		var tGrade = $("<td>").text(student_array[i].grade);
+ 		var tDelete = $("<td>");
  		var tButton = $("<button>").addClass("btn btn-danger").attr("index",i).text("Delete")
  		addClickDelete(tButton);
  		tDelete.append(tButton);
