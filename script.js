@@ -26,7 +26,7 @@ $(document).ready(function(){
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
- */ var inputIds = ["studentName",,"course","studentGrade","operation"];
+ */ var inputIds = ["studentName","course","studentGrade","operation"];
 
 
 /**
@@ -57,9 +57,9 @@ $(document).ready(function(){
  * @return undefined
  */
  function addStudent() {
- 	var studentName = $("#studentName").val();
- 	var studentCourse = $("#course").val();
- 	var studentGrade = $("#studentGrade").val();
+ 	var studentName = $("#"+inputIds[0]).val();
+ 	var studentCourse = $("#"+inputIds[1]).val();
+ 	var studentGrade = $("#"+inputIds[2]).val();
  	var studentObj = {
  		name: studentName,
  		course: studentCourse,
