@@ -1,3 +1,14 @@
+// var sgt = null;
+
+// function SGT() {
+// 	var self = this;
+// 	self.controller = null;
+// 	self.model = null;
+// 	self.view = null;
+
+
+// }
+
 $(document).ready(function(){
 	enterKeyStudent();
 })
@@ -112,9 +123,37 @@ $(document).ready(function(){
  	}
  	$(".avgGrade").text(average);
  	updateStudentList();
- 	debugger;
- 	
  }
+
+function getStudentData() {
+	$.ajax({
+		method: "POST",
+		dataType: "json",
+		url: "http://s-apis.learningfuze.com/sgt/get",
+		data: {api_key: "Pr0R1gXBEt"},
+		success: function(response){
+			console.log(response);
+		},
+		error: function(err){
+			console.log("There was an error");
+		}
+	});
+}
+
+function retrieveData() {
+    $.ajax({
+        dataType: 'json',
+        method: 'POST',
+        data: {api_key: "Pr0R1gXBEt"},
+        url: 'http://s-apis.learningfuze.com/sgt/get',
+        success: function(result) {
+            console.log(result);
+        },
+        error: function(err) {
+            console.log("There was an error");
+        }
+    });
+}
 
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
