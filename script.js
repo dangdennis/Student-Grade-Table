@@ -36,6 +36,7 @@ $(document).ready(function(){
 	// Need faster way of checking if all inputs !== ""
  	if( $("#studentName").val() !== "" && $("#course").val() !== "" && 
 		$("#studentGrade").val() !== "" ) {
+		 	// addStudentToDom(addStudent());
 		 	addStudent();
 		 	updateData();
 		 	clearAddStudentForm();
@@ -64,6 +65,7 @@ $(document).ready(function(){
  		name: studentName,
  		course: studentCourse,
  		grade: studentGrade
+
  	};
  	student_array.push(studentObj);
  	return studentObj;
@@ -105,8 +107,13 @@ $(document).ready(function(){
  */
  function updateData() {
  	average = calculateAverage(student_array);
+ 	if(isNaN(average)){
+ 		average = 0;
+ 	}
  	$(".avgGrade").text(average);
  	updateStudentList();
+ 	debugger;
+ 	
  }
 
 /**
@@ -132,7 +139,7 @@ $(document).ready(function(){
  	$(button).on("click", function(){
  		var index = button.attr("index");
  		student_array.splice(index,1);
- 		updateStudentList();
+ 		updateData();
  	})
  }
 
@@ -141,9 +148,18 @@ $(document).ready(function(){
  * into the .student_list tbody
  * @param studentObj
  */
- function addStudentToDom() {
-
- }
+ // function addStudentToDom(studentObj) {
+ // 		var tableRow = $("<tr>").addClass("row")
+ // 		var tName = $("<td>").text(studentObj.name);
+ // 		var tCourse = $("<td>").text(studentObj.course);
+ // 		var tGrade = $("<td>").text(studentObj.grade);
+ // 		var tDelete = $("<td>");
+ // 		var tButton = $("<button>").addClass("btn btn-danger").text("Delete")
+ // 		addClickDelete(tButton);
+ // 		tDelete.append(tButton);
+ // 		tableRow.append(tName).append(tCourse).append(tGrade).append(tDelete);
+ // 		$(".student-list tbody").append(tableRow);
+ // }
 
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
