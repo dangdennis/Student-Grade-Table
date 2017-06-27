@@ -1,14 +1,3 @@
-// var sgt = null;
-
-// function SGT() {
-// 	var self = this;
-// 	self.controller = null;
-// 	self.model = null;
-// 	self.view = null;
-
-
-// }
-
 $(document).ready(function(){
 	enterKeyStudent();
 })
@@ -20,39 +9,41 @@ $(document).ready(function(){
  * student_array - global array to hold student objects
  * @type {Array}
  */ var student_array = [
- 	{	name: "Dennis Dang",
- 		course: "Bio199",
- 		grade: "96"
- 	},
- 	{	name: "Megumi Iwama",
- 		course: "Dance101",
- 		grade: "100"
- 	},
- 	{	name: "Derek Smith",
- 		course: "KickAss",
- 		grade: "59"
- 	}
- ];
+	 	{	name: "Dennis Dang",
+	 		course: "Bio199",
+	 		grade: "96",
+	 		id: 999
+	 	},
+	 	{	name: "Megumi Iwama",
+	 		course: "Dance101",
+	 		grade: "100",
+	 		id: 1000
+	 	},
+	 	{	name: "Derek Smith",
+	 		course: "KickAss",
+	 		grade: "59",
+	 		id: 1001
+	 	}
+ 	];
 
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */ var inputIds = ["studentName","course","studentGrade","operation"];
 
-
 /**
  * addClicked - Event Handler when user clicks the add button
  */
  function addClicked() {
 	// Need faster way of checking if all inputs !== ""
- 	if( $("#studentName").val() !== "" && $("#course").val() !== "" && 
-		$("#studentGrade").val() !== "" ) {
-		 	// addStudentToDom(addStudent());
-		 	addStudent();
+ 	// if( $("#studentName").val() !== "" && $("#course").val() !== "" && 
+		// $("#studentGrade").val() !== "" ) {
+		 	var student = addStudent();
+		 	addStudentData(addStudent());
 		 	updateData();
 		 	clearAddStudentForm();
 		 	$("#studentName").focus();
- 	}
+ 	// }
  }
 
 
@@ -110,7 +101,7 @@ $(document).ready(function(){
  		average+=parseFloat(student.grade);
  	});
  	average = average / student_array.length;
- 	return average;
+ 	return average.toFixed(2);
  }
 
 /**
@@ -132,27 +123,65 @@ function getStudentData() {
 		url: "http://s-apis.learningfuze.com/sgt/get",
 		data: {api_key: "Pr0R1gXBEt"},
 		success: function(response){
-			console.log(response);
+			if(response.success){
+				response.data.forEach(function(el){
+					student_array.push(el);
+				})
+			} else {
+				$("#ajaxMessage").text(response.error);	
+				$("#ajaxModal").modal()
+			}
+			updateData();
+			console.log("Student data retrieved: success");
 		},
 		error: function(err){
-			console.log("There was an error");
+			console.log("Student data retrieved: error")
 		}
 	});
 }
 
-function retrieveData() {
-    $.ajax({
-        dataType: 'json',
-        method: 'POST',
-        data: {api_key: "Pr0R1gXBEt"},
-        url: 'http://s-apis.learningfuze.com/sgt/get',
-        success: function(result) {
-            console.log(result);
-        },
-        error: function(err) {
-            console.log("There was an error");
-        }
-    });
+function addStudentData(studentObj){
+	studentObj.api_key = "Pr0R1gXBEt";
+	$.ajax({
+		method: "POST",
+		dataType: "json",
+		url: "http://s-apis.learningfuze.com/sgt/create",
+		data: studentObj,
+		success: function(response){
+			if(response.error === true){
+				$("#ajaxMessage").text(response.error);	
+				$("#ajaxModal").modal()
+			}
+			console.log("Student data post: success")
+		},
+		error: function(err){
+			console.log("Student data post: error")
+		}
+	})
+}
+
+function deleteStudentData(studentObj){
+	$.ajax({
+		method: "POST",
+		dataType: "json",
+		url: "http://s-apis.learningfuze.com/sgt/delete",
+		data: {
+			api_key: "Pr0R1gXBEt",
+			student_id: studentObj.id
+		},
+		success: function(response){
+			if(response.error === "true"){
+				$("#ajaxMessage").text(response.error);	
+				$("#ajaxModal").modal()
+			}
+			console.log("Student data delete: success")
+			var index = student_array.indexOf(studentObj);
+			student_array.splice(index,1);
+		},
+		error: function(err){
+			console.log("Student data delete: error")
+		}
+	})
 }
 
 /**
@@ -161,44 +190,35 @@ function retrieveData() {
  function updateStudentList() {
  	$("tbody").text("");
  	for(var i=0;i<student_array.length;i++){
- 		var tableRow = $("<tr>").addClass("row")
- 		var tName = $("<td>").text(student_array[i].name);
- 		var tCourse = $("<td>").text(student_array[i].course);
- 		var tGrade = $("<td>").text(student_array[i].grade);
- 		var tDelete = $("<td>");
- 		var tButton = $("<button>").addClass("btn btn-danger").attr("index",i).text("Delete")
- 		addClickDelete(tButton);
- 		tDelete.append(tButton);
- 		tableRow.append(tName).append(tCourse).append(tGrade).append(tDelete);
- 		$(".student-list tbody").append(tableRow);
+ 		addStudentToDom(student_array[i]);
  	}
- }
-
- function addClickDelete(button) {
- 	$(button).on("click", function(){
- 		var index = button.attr("index");
- 		student_array.splice(index,1);
- 		updateData();
- 	})
  }
 
 /**
  * addStudentToDom - take in a student object, create html elements from the values and then append the elements
  * into the .student_list tbody
- * @param studentObj
- */
- // function addStudentToDom(studentObj) {
- // 		var tableRow = $("<tr>").addClass("row")
- // 		var tName = $("<td>").text(studentObj.name);
- // 		var tCourse = $("<td>").text(studentObj.course);
- // 		var tGrade = $("<td>").text(studentObj.grade);
- // 		var tDelete = $("<td>");
- // 		var tButton = $("<button>").addClass("btn btn-danger").text("Delete")
- // 		addClickDelete(tButton);
- // 		tDelete.append(tButton);
- // 		tableRow.append(tName).append(tCourse).append(tGrade).append(tDelete);
- // 		$(".student-list tbody").append(tableRow);
- // }
+ * @param studentObj*/
+
+function addStudentToDom(studentObj) {
+	var tableRow = $("<tr>").addClass("row")
+ 		var tName = $("<td>").text(studentObj.name);
+ 		var tCourse = $("<td>").text(studentObj.course);
+ 		var tGrade = $("<td>").text(studentObj.grade);
+ 		var tDelete = $("<td>");
+ 		var tButton = $("<button>",{
+ 			class:"btn btn-danger",
+ 			text: "Delete"
+ 		});
+ 		(function(){
+ 			tButton.on("click",function(){
+	 			deleteStudentData(studentObj);
+	 			tableRow.remove();
+ 			})
+ 		})()
+ 		tDelete.append(tButton);
+ 		tableRow.append(tName,tCourse,tGrade,tDelete);
+ 		$(".student-list tbody").append(tableRow);
+}
 
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
