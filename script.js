@@ -6,7 +6,9 @@ function SGT() {
 	* Initiator for event handlers
 	*/
 	self.init = function() {
-		self.eventHandlers();
+		$(document).ready(function() {
+			self.eventHandlers();
+		})
 	}
 
 	/**
@@ -67,7 +69,7 @@ function SGT() {
 		self.name = studentObj.name;
 		self.course = studentObj.course;
 		self.grade = studentObj.name;
-		self.delete = function(){
+		self.delete = function() {
 
 		}
 	}
@@ -167,7 +169,7 @@ function SGT() {
 					$("#ajaxMessage").text(response.error);	
 					$("#ajaxModal").modal()
 				}
-				updateData();
+				self.updateData();
 				console.log("Student data retrieved: success");
 			},
 			error: function(err){
