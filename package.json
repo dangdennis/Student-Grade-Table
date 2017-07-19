@@ -1,0 +1,19 @@
+{
+  "name": "node_sgtserver",
+  "version": "1.0.0",
+  "description": "- use the dataDump.sql file and import it via phpmyadmin SQL tab.  copy and paste the SQL into there to recreate the DB - copy the mysql_connect.php.config file to mysql_connect.php and put in the appropriate data for your local server.  probably user: root and password: root - follow the instructions inside data.php (which will also include altering the files in the dataApi directory)",
+  "main": "data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.3",
+    "mysql": "^2.13.0",
+    "nodemon": "^1.11.0"
+  },
+  "devDependencies": {}
+}
