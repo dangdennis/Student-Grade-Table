@@ -14,7 +14,12 @@ function SGT() {
 		$(document).ready(function() {
 			self.reset();
 		});
-		self.enterKeyStudent();
+		$(document).on("keydown", function(e) {
+			var key = e.which || e.keyCode;
+			if (key === 13) {
+				self.addClicked();
+			}
+		});
 		$("#enterKey").on("click", function() {
 			self.addClicked();
 		});
@@ -86,35 +91,18 @@ function SGT() {
 
 	self.addClicked = function() {
 		var student = self.addStudent();
-		self.addStudentData(student);
-		self.updateData();
-		self.clearAddStudentForm();
+		self.addStudentDB(student);
+		self.updateStats();
+		self.clearStudentForm();
 		$("#studentName").focus();
 	};
 
-	/**
-	 * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
-	 */
 	self.cancelClicked = function() {
-		clearAddStudentForm();
+		clearStudentForm();
 	};
 
-	/**
-	 * clearAddStudentForm - clears out the form values based on inputIds variable
-	 */
-	self.clearAddStudentForm = function() {
+	self.clearStudentForm = function() {
 		$("input").val("");
-	};
-
-	// Adds event listener for enter key - adds student.
-	// Reduces mouse movement to and fro adding student data
-	self.enterKeyStudent = function() {
-		$(document).on("keydown", function(e) {
-			var key = e.which || e.keyCode;
-			if (key === 13) {
-				self.addClicked();
-			}
-		});
 	};
 
 	/**
@@ -131,9 +119,9 @@ function SGT() {
 	};
 
 	/**
-	 * updateData - centralized function to update the average and call student list update
+	 * updateStats - centralized function to update the average and call student list update
 	 */
-	self.updateData = function() {
+	self.updateStats = function() {
 		average = self.calculateAverage(student_array);
 		if (isNaN(average)) {
 			average = 0;
@@ -155,7 +143,7 @@ function SGT() {
 						student_array.push(el);
 					});
 				}
-				self.updateData();
+				self.updateStats();
 				console.log("Student data retrieved: success");
 			},
 			error: function(err) {
@@ -164,7 +152,7 @@ function SGT() {
 		});
 	};
 
-	self.addStudentData = function(student) {
+	self.addStudentDB = function(student) {
 		$.ajax({
 			method: "POST",
 			dataType: "json",
@@ -183,7 +171,7 @@ function SGT() {
 		});
 	};
 
-	self.deleteStudentData = function(studentObj) {
+	self.deleteStudentDB = function(studentObj) {
 		$.ajax({
 			method: "POST",
 			dataType: "json",
@@ -224,7 +212,7 @@ function SGT() {
 		});
 		(function() {
 			tButton.on("click", function() {
-				self.deleteStudentData(studentObj);
+				self.deleteStudentDB(studentObj);
 				tableRow.remove();
 			});
 		})();
@@ -254,7 +242,7 @@ function SGT() {
 				grade: "59"
 			}
 		];
-		self.updateData();
+		self.updateStats();
 	};
 
 	self.init();
