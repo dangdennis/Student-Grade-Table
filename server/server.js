@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json 
 app.use(bodyParser.json());
 
-const mysql_connection_info = require('./connect.js');
+const mysql_connection_info = require('./mysql_connection.js');
 
 //define your connection info for mysql
 
@@ -82,7 +82,7 @@ app.post('/delete', function(req,res){
 
 
 //set up your express server and start listening
-app.listen('8000', function(){
-	console.log('server listening on port 8000');
+app.listen('5500', function(){
+	console.log('server listening on port 5500');
 });
 

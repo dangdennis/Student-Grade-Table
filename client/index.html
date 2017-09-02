@@ -2,6 +2,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
@@ -41,9 +42,10 @@
             </span>
             <input type="text" class="form-control" name="grade" id="studentGrade" placeholder="Student Grade">
         </div>
-        <button id="enterKey" type="button" class="btn btn-success">Add</button>
-        <button id="cancelKey" type="button" class="btn btn-default">Cancel</button>
-        <button id="getDataKey" type="button" class="btn btn-primary">Get Data From Server</button>
+        <div class="form-group input-group">
+            <button id="enterKey" type="button" class="btn btn-success">Add</button>
+            <button id="cancelKey" type="button" class="btn btn-warning">Cancel</button>
+        </div>
     </div>
     <div class="student-list-container col-xs-12 col-md-9 col-md-pull-3">
         <table class="student-list table table-hover">
