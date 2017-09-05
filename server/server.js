@@ -87,7 +87,15 @@ app.post("/delete", function(req, res) {
 	});
 });
 
-//set up your express server and start listening
+app.use(function(err, req, res, next) {
+	res.status(err.status || 500);
+	res.json({
+		code: err.status
+	});
+	console.log(err);
+	next();
+});
+
 app.listen("5500", function() {
 	console.log("server listening on port 5500");
 });
