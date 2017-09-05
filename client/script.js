@@ -2,6 +2,9 @@ var sgt = new SGT();
 
 function SGT() {
 	var self = this;
+	var student_array = [];
+	var sortingState = { name: true, course: true, grade: true };
+	var formValidated = false;
 
 	self.init = function() {
 		$(document).ready(function() {
@@ -11,75 +14,37 @@ function SGT() {
 	};
 
 	self.eventHandlers = function() {
-		$(document).ready(function() {
-			self.reset();
-		});
 		$(document).on("keydown", function(e) {
 			var key = e.which || e.keyCode;
 			if (key === 13) {
-				self.addClicked();
+				self.clickAdd();
 			}
 		});
 		$(".enterKey").on("click", function() {
-			self.addClicked();
+			self.clickAdd();
 		});
-		$("#cancelKey").on("click", function() {
-			self.cancelClicked();
+		$(".cancelKey").on("click", function() {
+			self.clickCancel();
 		});
-		$("#getDataKey").on("click", function() {
+		$(".getDataKey").on("click", function() {
 			self.getStudentData();
+		});
+		$(".fa-sort--name").on("click", function() {
+			self.sortByName();
+		});
+		$(".fa-sort--course").on("click", function() {
+			self.sortByCourse();
+		});
+		$(".fa-sort--grade").on("click", function() {
+			self.sortByGrade();
 		});
 	};
 
-	/**
-	 * Define all global variables here
-	 */
-
-	/**
-	 * student_array - global array to hold student objects
-	 * @type {Array}
-	 */
-
-	var student_array = [
-		{
-			name: "Dennis Dang",
-			course_name: "Artificial Intelligence I",
-			grade: "96"
-		},
-		{
-			name: "Megumi Iwama",
-			course_name: "Contemporary 301",
-			grade: "100"
-		},
-		{
-			name: "Derek Smith",
-			course_name: "Metallurgy",
-			grade: "59"
-		}
-	];
-
-	/**
-	* inputIds - id's of the elements that are used to add students
-	* @type {string[]}
-	*/
-
-	var inputIds = [
-		"#studentName",
-		"#course_name",
-		"#studentGrade",
-		"#operation"
-	];
-
-	/**
-	 * addStudent - creates a student objects based on input fields in the 
-	 * form and adds the object to global student array
-	 * @return undefined
-	 */
-
+	// Form function
 	self.addStudent = function() {
-		var name = $(inputIds[0]).val();
-		var course_name = $(inputIds[1]).val();
-		var grade = $(inputIds[2]).val();
+		var name = $("#studentName").val();
+		var course_name = $("#course_name").val();
+		var grade = $("#studentGrade").val();
 		var studentObj = {
 			name,
 			course_name,
@@ -89,38 +54,35 @@ function SGT() {
 		return studentObj;
 	};
 
-	self.addClicked = function() {
-		var student = self.addStudent();
-		self.addStudentDB(student);
-		self.updateStats();
-		self.clearStudentForm();
-		$("#studentName").focus();
+	self.clickAdd = function() {
+		self.validateForm();
+		if (formValidated) {
+			var student = self.addStudent();
+			self.addStudentDB(student);
+			self.updateStats();
+			self.clearStudentForm();
+			$("#studentName").focus();
+		}
 	};
 
-	self.cancelClicked = function() {
-		clearStudentForm();
+	self.clickCancel = function() {
+		self.clearStudentForm();
 	};
 
 	self.clearStudentForm = function() {
 		$("input").val("");
 	};
 
-	/**
-	 * calculateAverage - loop through the global student array and calculate average grade and return that value
-	 * @returns {number}
-	 */
-	self.calculateAverage = function(arr) {
-		var average = 0;
-		student_array.forEach(function(student) {
-			average += parseFloat(student.grade);
-		});
-		average = average / student_array.length;
-		return average.toFixed(2);
+	self.validateForm = function() {
+		var name = $("#studentName").val();
+		var course = $("#course_name").val();
+		var grade = $("#studentGrade").val();
+		if (name && course && !isNaN(grade)) {
+			formValidated = true;
+		}
 	};
 
-	/**
-	 * updateStats - centralized function to update the average and call student list update
-	 */
+	// Stats Update
 	self.updateStats = function() {
 		average = self.calculateAverage(student_array);
 		if (isNaN(average)) {
@@ -130,6 +92,16 @@ function SGT() {
 		self.updateStudentList();
 	};
 
+	self.calculateAverage = function(arr) {
+		var average = 0;
+		student_array.forEach(function(student) {
+			average += parseFloat(student.grade);
+		});
+		average = average / student_array.length;
+		return average.toFixed(2);
+	};
+
+	// Database Interaction
 	self.getStudentData = function() {
 		student_array = [];
 		$.ajax({
@@ -190,9 +162,7 @@ function SGT() {
 		});
 	};
 
-	/**
-	 * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
-	 */
+	// DOM Manipulation
 	self.updateStudentList = function() {
 		$("tbody").text("");
 		for (var i = 0; i < student_array.length; i++) {
@@ -221,34 +191,98 @@ function SGT() {
 		$(".student-list tbody").append(tableRow);
 	};
 
-	/**
-	 * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
-	 */
-	self.reset = function() {
-		var student_array = [
-			{
-				name: "Dennis Dang",
-				course_name: "Artificial Intelligence I",
-				grade: "96"
-			},
-			{
-				name: "Megumi Iwama",
-				course_name: "Contemporary 301",
-				grade: "100"
-			},
-			{
-				name: "Derek Smith",
-				course_name: "Metallurgy",
-				grade: "59"
-			}
-		];
-		self.updateStats();
+	self.sortByName = function() {
+		if (sortingState.name) {
+			sortingState.name = !sortingState.name;
+			student_array.sort(function(a, b) {
+				var nameA = a.name.toUpperCase();
+				var nameB = b.name.toUpperCase();
+				if (nameA < nameB) {
+					return -1;
+				}
+				if (nameA > nameB) {
+					return 1;
+				}
+				return 0;
+			});
+		} else {
+			sortingState.name = !sortingState.name;
+			student_array.sort(function(a, b) {
+				var nameA = a.name.toUpperCase();
+				var nameB = b.name.toUpperCase();
+				if (nameA < nameB) {
+					return 1;
+				}
+				if (nameA > nameB) {
+					return -1;
+				}
+				return 0;
+			});
+		}
+		self.updateStudentList();
+	};
+
+	self.sortByCourse = function() {
+		if (sortingState.course) {
+			sortingState.course = !sortingState.course;
+			student_array.sort(function(a, b) {
+				var courseA = a.course_name.toUpperCase();
+				var courseB = b.course_name.toUpperCase();
+				if (courseA < courseB) {
+					return -1;
+				}
+				if (courseA > courseB) {
+					return 1;
+				}
+				return 0;
+			});
+		} else {
+			sortingState.course = !sortingState.course;
+			student_array.sort(function(a, b) {
+				var courseA = a.course_name.toUpperCase();
+				var courseB = b.course_name.toUpperCase();
+				if (courseA < courseB) {
+					return 1;
+				}
+				if (courseA > courseB) {
+					return -1;
+				}
+				return 0;
+			});
+		}
+		self.updateStudentList();
+	};
+
+	self.sortByGrade = function() {
+		if (sortingState.grade) {
+			sortingState.grade = !sortingState.grade;
+			student_array.sort(function(a, b) {
+				var gradeA = a.grade;
+				var gradeB = b.grade;
+				if (gradeA < gradeB) {
+					return 1;
+				}
+				if (gradeA > gradeB) {
+					return -1;
+				}
+				return 0;
+			});
+		} else {
+			sortingState.grade = !sortingState.grade;
+			student_array.sort(function(a, b) {
+				var gradeA = a.grade;
+				var gradeB = b.grade;
+				if (gradeA < gradeB) {
+					return -1;
+				}
+				if (gradeA > gradeB) {
+					return 1;
+				}
+				return 0;
+			});
+		}
+		self.updateStudentList();
 	};
 
 	self.init();
 }
-
-//sort by fields
-//form validation
-//autocompletion
-//server timeout

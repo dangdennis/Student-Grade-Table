@@ -3,9 +3,13 @@
 }
 
 .fa-sort {
-	margin-left: 5px;
+	margin-left: 7px;
+	box-shadow: 0 0 0 4px rgba(255, 255, 255, 1);
+	transition: background 0.2s, color 0.2s;
 }
 
-.fa-sort--name {}
-.fa-sort--course {}
-.fa-sort--grade {}
+.fa-sort:hover {
+	background: rgba(255, 255, 255, 1);
+	color: #64bb5d;
+}
+
