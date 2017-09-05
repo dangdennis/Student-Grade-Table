@@ -77,7 +77,7 @@ function SGT() {
 		var name = $("#studentName").val();
 		var course = $("#course_name").val();
 		var grade = $("#studentGrade").val();
-		if (name && course && !isNaN(grade)) {
+		if (name && course && !isNaN(parseInt(grade))) {
 			formValidated = true;
 		}
 	};
