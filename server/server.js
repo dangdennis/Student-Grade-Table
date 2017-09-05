@@ -45,14 +45,16 @@ app.post("/create", function(req, res) {
 	const name = req.body.name;
 	const grade = req.body.grade;
 	const course_name = req.body.course_name;
-	const queryString = `INSERT INTO ${table} (name, grade, course_name) VALUES ('${name}', '${grade}', '${course_name}')`;
-	console.log("my queryString: ", queryString);
-	connection.query(queryString, function(error, results, fields) {
-		if (error) {
-			throw error;
-		}
-		res.send(JSON.stringify(results));
-	});
+	if (name && grade && course_name) {
+		const queryString = `INSERT INTO ${table} (name, grade, course_name) VALUES ('${name}', '${grade}', '${course_name}')`;
+		console.log("my queryString: ", queryString);
+		connection.query(queryString, function(error, results, fields) {
+			if (error) {
+				throw error;
+			}
+			res.send(JSON.stringify(results));
+		});
+	}
 });
 
 // Read
