@@ -20,7 +20,7 @@ function SGT() {
 				self.addClicked();
 			}
 		});
-		$("#enterKey").on("click", function() {
+		$(".enterKey").on("click", function() {
 			self.addClicked();
 		});
 		$("#cancelKey").on("click", function() {
