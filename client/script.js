@@ -38,6 +38,12 @@ function SGT() {
 		$(".fa-sort--grade").on("click", function() {
 			self.sortByGrade();
 		});
+		$("#studentName, #course_name, #studentGrade").on("focus", function() {
+			self.validateForm();
+			if ($(this).parent().hasClass("has-error")) {
+				$(this).val("");
+			}
+		});
 	};
 
 	// Form function
@@ -92,19 +98,19 @@ function SGT() {
 		var name = $name.val();
 		var course = $course.val();
 		var grade = $grade.val();
-		if(!name) {
-			$name.attr('placeholder',"Please enter a student name");
+		if (!name) {
+			$name.val("Please enter a student name");
 			$name.parent().addClass("has-error");
 		}
-		if(isNaN(parseInt(grade))) {
-			$grade.attr('placeholder',"Please enter a numerical value");
+		if (isNaN(parseInt(grade))) {
+			$grade.val("Please enter a numerical value");
 			$grade.parent().addClass("has-error");
 		}
-		if(!course) {
-			$course.attr('placeholder',"Please enter a course");
+		if (!course) {
+			$course.val("Please enter a course name");
 			$course.parent().addClass("has-error");
 		}
-	}
+	};
 
 	// Stats Update
 	self.updateStats = function() {
