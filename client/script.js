@@ -131,7 +131,7 @@ function SGT() {
 		$.ajax({
 			method: "GET",
 			dataType: "json",
-			url: "http://localhost:5500/get",
+			url: "/get",
 			success: function(response) {
 				if (response) {
 					response.forEach(function(el) {
@@ -151,7 +151,7 @@ function SGT() {
 		$.ajax({
 			method: "POST",
 			dataType: "json",
-			url: "http://localhost:5500/create",
+			url: "/create",
 			data: {
 				name: student.name,
 				course_name: student.course_name,
@@ -170,7 +170,7 @@ function SGT() {
 		$.ajax({
 			method: "POST",
 			dataType: "json",
-			url: "http://localhost:5500/delete",
+			url: "/delete",
 			data: {
 				id: studentObj.id
 			},
