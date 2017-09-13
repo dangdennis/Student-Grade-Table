@@ -76,10 +76,12 @@ function SGT() {
 
 	self.clickCancel = function() {
 		self.clearStudentForm();
+		$("#studentName").focus();
 	};
 
 	self.clearStudentForm = function() {
 		$("input").val("");
+		$("#studentName, #course_name, #studentGrade").parent().removeClass('has-error');
 	};
 
 	self.validateForm = function() {
