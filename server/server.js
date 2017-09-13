@@ -29,8 +29,7 @@ const connection = mysql.createConnection(mysql_connection_info);
 // connection.connect(connected_callback);
 connection.connect(function(err) {
 	if (err) {
-		console.error("error connecting: ", err.stack);
-		return;
+		throw err;
 	}
 });
 
@@ -40,14 +39,13 @@ const table = "student_data";
 app.use(express.static(path.resolve("..", "client")));
 
 app.post("/create", function(req, res) {
-	//define your handler for your mysql connection callback
-	console.log("req.body", req.body);
 	const name = req.body.name;
 	const grade = req.body.grade;
 	const course_name = req.body.course_name;
 	if (name && grade && course_name) {
-		const queryString = `INSERT INTO ${table} (name, grade, course_name) VALUES ('${name}', '${grade}', '${course_name}')`;
-		console.log("my queryString: ", queryString);
+		let queryString = `INSERT INTO ${table} (??, ??, ??) VALUES (?,?,?)`;
+		const inserts = ['name','grade','course_name',name,grade,course_name];
+		queryString = mysql.format(queryString,inserts);
 		connection.query(queryString, function(error, results, fields) {
 			if (error) {
 				throw error;
@@ -59,13 +57,10 @@ app.post("/create", function(req, res) {
 
 // Read
 app.get("/get", function(req, res) {
-	//define your handler for your mysql connection callback
-	console.log(req.body);
 	connection.query(`SELECT * FROM ${table}`, function(error, results, fields) {
 		if (error) {
 			throw error;
 		}
-		console.log("The data:", results);
 		res.send(JSON.stringify(results));
 	});
 });
@@ -74,16 +69,14 @@ app.get("/get", function(req, res) {
 
 // Delete
 app.post("/delete", function(req, res) {
-	console.log("this is the req.body", req.body);
 	const id = req.body.id;
-	const queryString = `DELETE FROM ${table} WHERE id="${id}"`;
+	let queryString = `DELETE FROM ${table} WHERE id=?`;
+	const inserts = [id];
+	queryString = mysql.format(queryString,inserts);
 	connection.query(queryString, function(error, results, fields) {
 		if (error) {
 			throw error;
 		}
-		console.log("The data:", results);
-		console.log(`deleted ${results.affectedRows} row`);
-		res.send(JSON.stringify(results));
 	});
 });
 
@@ -92,7 +85,6 @@ app.use(function(err, req, res, next) {
 	res.json({
 		code: err.status
 	});
-	console.log(err);
 	next();
 });
 

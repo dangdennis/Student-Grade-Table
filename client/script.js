@@ -62,6 +62,9 @@ function SGT() {
 			self.updateStats();
 			self.clearStudentForm();
 			$("#studentName").focus();
+			formValidated = false;
+		} else {
+			self.indicateFormError();
 		}
 	};
 
@@ -81,6 +84,27 @@ function SGT() {
 			formValidated = true;
 		}
 	};
+
+	self.indicateFormError = function() {
+		var $name = $("#studentName");
+		var $course = $("#course_name");
+		var $grade = $("#studentGrade");
+		var name = $name.val();
+		var course = $course.val();
+		var grade = $grade.val();
+		if(!name) {
+			$name.attr('placeholder',"Please enter a student name");
+			$name.parent().addClass("has-error");
+		}
+		if(isNaN(parseInt(grade))) {
+			$grade.attr('placeholder',"Please enter a numerical value");
+			$grade.parent().addClass("has-error");
+		}
+		if(!course) {
+			$course.attr('placeholder',"Please enter a course");
+			$course.parent().addClass("has-error");
+		}
+	}
 
 	// Stats Update
 	self.updateStats = function() {
@@ -107,10 +131,9 @@ function SGT() {
 		$.ajax({
 			method: "GET",
 			dataType: "json",
-			url: "/get",
+			url: "http://localhost:5500/get",
 			success: function(response) {
 				if (response) {
-					console.log(response);
 					response.forEach(function(el) {
 						student_array.push(el);
 					});
@@ -119,7 +142,7 @@ function SGT() {
 				console.log("Student data retrieved: success");
 			},
 			error: function(err) {
-				console.log("Student data retrieved: error");
+				throw err;
 			}
 		});
 	};
@@ -128,7 +151,7 @@ function SGT() {
 		$.ajax({
 			method: "POST",
 			dataType: "json",
-			url: "/create",
+			url: "http://localhost:5500/create",
 			data: {
 				name: student.name,
 				course_name: student.course_name,
@@ -147,7 +170,7 @@ function SGT() {
 		$.ajax({
 			method: "POST",
 			dataType: "json",
-			url: "/delete",
+			url: "http://localhost:5500/delete",
 			data: {
 				id: studentObj.id
 			},
