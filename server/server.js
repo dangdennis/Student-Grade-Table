@@ -44,8 +44,8 @@ app.post("/create", function(req, res) {
 	const course_name = req.body.course_name;
 	if (name && grade && course_name) {
 		let queryString = `INSERT INTO ${table} (??, ??, ??) VALUES (?,?,?)`;
-		const inserts = ['name','grade','course_name',name,grade,course_name];
-		queryString = mysql.format(queryString,inserts);
+		const inserts = ["name", "grade", "course_name", name, grade, course_name];
+		queryString = mysql.format(queryString, inserts);
 		connection.query(queryString, function(error, results, fields) {
 			if (error) {
 				throw error;
@@ -72,11 +72,12 @@ app.post("/delete", function(req, res) {
 	const id = req.body.id;
 	let queryString = `DELETE FROM ${table} WHERE id=?`;
 	const inserts = [id];
-	queryString = mysql.format(queryString,inserts);
+	queryString = mysql.format(queryString, inserts);
 	connection.query(queryString, function(error, results, fields) {
 		if (error) {
 			throw error;
 		}
+		res.send(JSON.stringify(results));
 	});
 });
 

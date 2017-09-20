@@ -40,17 +40,32 @@ function SGT() {
 		});
 		$("#studentName, #course_name, #studentGrade").on("focus", function() {
 			self.validateForm();
-			if ($(this).parent().hasClass("has-error")) {
-				$(this).val("");
+			if (
+				$(this)
+					.parent()
+					.hasClass("has-error")
+			) {
+				$(this)
+					.parent()
+					.removeClass("has-error");
+				$(".input-errors")
+					.removeClass("alert alert-danger")
+					.html("");
 			}
 		});
 	};
 
 	// Form function
 	self.addStudent = function() {
-		var name = $("#studentName").val();
-		var course_name = $("#course_name").val();
-		var grade = $("#studentGrade").val();
+		var name = $("#studentName")
+			.val()
+			.trim();
+		var course_name = $("#course_name")
+			.val()
+			.trim();
+		var grade = $("#studentGrade")
+			.val()
+			.trim();
 		var studentObj = {
 			name,
 			course_name,
@@ -69,6 +84,9 @@ function SGT() {
 			self.clearStudentForm();
 			$("#studentName").focus();
 			formValidated = false;
+			$(".input-errors")
+				.removeClass("alert alert-danger")
+				.html("");
 		} else {
 			self.indicateFormError();
 		}
@@ -77,18 +95,29 @@ function SGT() {
 	self.clickCancel = function() {
 		self.clearStudentForm();
 		$("#studentName").focus();
+		$(".input-errors")
+			.removeClass("alert alert-danger")
+			.html("");
 	};
 
 	self.clearStudentForm = function() {
 		$("input").val("");
-		$("#studentName, #course_name, #studentGrade").parent().removeClass('has-error');
+		$("#studentName, #course_name, #studentGrade")
+			.parent()
+			.removeClass("has-error");
 	};
 
 	self.validateForm = function() {
-		var name = $("#studentName").val();
-		var course = $("#course_name").val();
-		var grade = $("#studentGrade").val();
-		if (name && course && !isNaN(parseInt(grade))) {
+		var name = $("#studentName")
+			.val()
+			.trim();
+		var course = $("#course_name")
+			.val()
+			.trim();
+		var grade = $("#studentGrade")
+			.val()
+			.trim();
+		if (!(name === "") && !(course === "") && !isNaN(parseInt(grade))) {
 			formValidated = true;
 		}
 	};
@@ -97,20 +126,32 @@ function SGT() {
 		var $name = $("#studentName");
 		var $course = $("#course_name");
 		var $grade = $("#studentGrade");
-		var name = $name.val();
-		var course = $course.val();
-		var grade = $grade.val();
+		var name = $name.val().trim();
+		var course = $course.val().trim();
+		var grade = $grade.val().trim();
 		if (!name) {
-			$name.val("Please enter a student name");
 			$name.parent().addClass("has-error");
+			$name.attr("placeholder", "Please enter a student name");
+			var alert = $("<p>").html("Please enter a student name.");
+			$(".input-errors")
+				.addClass("alert alert-danger")
+				.append(alert);
 		}
 		if (isNaN(parseInt(grade))) {
-			$grade.val("Please enter a numerical value");
+			$grade.attr("placeholder", "Please enter a grade");
 			$grade.parent().addClass("has-error");
+			var alert = $("<p>").html("Please enter a grade.");
+			$(".input-errors")
+				.addClass("alert alert-danger")
+				.append(alert);
 		}
 		if (!course) {
-			$course.val("Please enter a course name");
+			$course.attr("placeholder", "Please enter a course name");
 			$course.parent().addClass("has-error");
+			var alert = $("<p>").html("Please enter a course name.");
+			$(".input-errors")
+				.addClass("alert alert-danger")
+				.append(alert);
 		}
 	};
 
