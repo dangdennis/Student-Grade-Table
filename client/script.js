@@ -48,7 +48,7 @@ function SGT() {
 				$(this)
 					.parent()
 					.removeClass("has-error");
-				$(".input-errors")
+				$(".name-error, .grade-error, .course-error")
 					.removeClass("alert alert-danger")
 					.html("");
 			}
@@ -95,7 +95,7 @@ function SGT() {
 	self.clickCancel = function() {
 		self.clearStudentForm();
 		$("#studentName").focus();
-		$(".input-errors")
+		$(".name-error, .grade-error, .course-error")
 			.removeClass("alert alert-danger")
 			.html("");
 	};
@@ -133,7 +133,8 @@ function SGT() {
 			$name.parent().addClass("has-error");
 			$name.attr("placeholder", "Please enter a student name");
 			var alert = $("<p>").html("Please enter a student name.");
-			$(".input-errors")
+			$(".name-error")
+				.html("")
 				.addClass("alert alert-danger")
 				.append(alert);
 		}
@@ -141,7 +142,8 @@ function SGT() {
 			$grade.attr("placeholder", "Please enter a grade");
 			$grade.parent().addClass("has-error");
 			var alert = $("<p>").html("Please enter a grade.");
-			$(".input-errors")
+			$(".grade-error")
+				.html("")
 				.addClass("alert alert-danger")
 				.append(alert);
 		}
@@ -149,7 +151,8 @@ function SGT() {
 			$course.attr("placeholder", "Please enter a course name");
 			$course.parent().addClass("has-error");
 			var alert = $("<p>").html("Please enter a course name.");
-			$(".input-errors")
+			$(".course-error")
+				.html("")
 				.addClass("alert alert-danger")
 				.append(alert);
 		}
