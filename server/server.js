@@ -42,16 +42,21 @@ app.post("/create", function(req, res) {
 	const name = req.body.name;
 	const grade = req.body.grade;
 	const course_name = req.body.course_name;
+	console.log('GRADE',grade);
 	if (name && grade && course_name) {
-		let queryString = `INSERT INTO ${table} (??, ??, ??) VALUES (?,?,?)`;
-		const inserts = ["name", "grade", "course_name", name, grade, course_name];
+		let queryString = `INSERT INTO ${table} (??, ??, ??) VALUES (?,${grade},?)`;
+		const inserts = ["name", "grade", "course_name", name, course_name];
 		queryString = mysql.format(queryString, inserts);
+		console.log('QUERY STRING',queryString);
 		connection.query(queryString, function(error, results, fields) {
 			if (error) {
+				res.send(null);
 				throw error;
 			}
 			res.send(JSON.stringify(results));
 		});
+	} else {
+		res.send(null);
 	}
 });
 
